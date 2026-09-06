@@ -1,0 +1,19 @@
+[
+	{
+    "userId": 301,
+    "foodId": 201,
+    "quantity": 4
+} ,
+
+{
+    "userId": 302,
+    "foodId": 201,
+    "quantity": 2
+} ,
+
+{
+    "userId": 303,
+    "foodId": 202,
+    "quantity": 3
+}
+]
