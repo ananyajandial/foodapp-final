@@ -1,7 +1,8 @@
-
+import { useState } from "react";
 
 function ResultView({ error, dataList, viewTitle, onEditFood , onDeleteFood  , onStatusUpdate , role,
-setShowOrderModal, setSelectedFood , onCancelOrder}) {
+setShowOrderModal, setSelectedFood , onCancelOrder , onUpdateProfile}) {
+const [isEditingProfile, setIsEditingProfile] = useState(false);
 
 const isSimpleMessage = 
     typeof dataList === "string" ||
@@ -37,6 +38,12 @@ const isSimpleMessage =
         dataList.length > 0 &&
         "orderId" in dataList[0];
 
+    const isUserProfile =
+    dataList &&
+    typeof dataList === "object" &&
+    !Array.isArray(dataList) &&
+    "userId" in dataList;
+
     return (
         <div className="card shadow p-4 mt-4">
 
@@ -67,16 +74,7 @@ const isSimpleMessage =
 )}
 
 {isOrderTable && role === "ROLE_USER" && (
-    <td>
-        {item.status?.toLowerCase() === "placed" && (
-            <button
-                className="btn btn-danger btn-sm"
-                onClick={() => onCancelOrder(item.orderId)}
-            >
-                Cancel Order
-            </button>
-        )}
-    </td>
+    <th>Actions</th>
 )}
 
 
@@ -162,20 +160,84 @@ const isSimpleMessage =
         <table className="table table-bordered">
             <tbody>
 
-            {Object.entries(dataList).map(([key, value]) => (
+{Object.entries(dataList).map(([key, value]) => (
 
-            <tr key={key}>
-                <th>{key}</th>
-                    <td>{String(value)}</td>
-                </tr>
-         ))}
+<tr key={key}>
+
+    <th>{key}</th>
+
+    <td>
+
+        {isUserProfile ? (
+
+            key === "userId" ? (
+
+                <input
+                    className="form-control"
+                    value={value || ""}
+                    readOnly
+                />
+
+            ) : (
+
+<input
+    className="form-control"
+    defaultValue={value || ""}
+    disabled={!isEditingProfile}
+    onChange={(e) => {
+        dataList[key] = e.target.value;
+    }}
+/>
+
+            )
+
+        ) : (
+
+            String(value)
+
+        )}
+
+    </td>
+
+</tr>
+
+))}
             </tbody>
         </table>
 
         )}
+
+{isUserProfile && !isEditingProfile && (
+
+    <button
+className="btn btn-primary mt-3"        onClick={() => setIsEditingProfile(true)}
+    >
+        Edit Profile
+    </button>
+
+)}
+
+{isUserProfile && isEditingProfile && (
+
+    <button
+        className="btn btn-success mt-3"
+        onClick={() => {
+
+            onUpdateProfile(dataList);
+            setIsEditingProfile(false);
+
+        }}
+    >
+        Save Changes
+    </button>
+
+)}
+
     
 
     </div>
+
+    
     );
 }
 

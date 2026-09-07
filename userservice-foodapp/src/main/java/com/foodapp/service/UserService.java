@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.foodapp.dto.OrderDTO;
+import com.foodapp.dto.UserDto;
 import com.foodapp.entity.User;
 
 public interface UserService {
@@ -18,7 +19,7 @@ public interface UserService {
 
 	public List<User> getAllUsers();
 
-	public User updateUser(Integer id, User user);
+	public User updateUser(Integer id, UserDto userdto);
 
 	public User deleteUser(Integer id);
 

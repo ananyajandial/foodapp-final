@@ -13,12 +13,16 @@ function OrderModal({
         <div
             className="modal d-block"
             tabIndex="-1"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+            style={{
+                backgroundColor: "rgba(0,0,0,0.5)"
+            }}
         >
             <div className="modal-dialog">
+
                 <div className="modal-content">
 
                     <div className="modal-header">
+
                         <h5 className="modal-title">
                             Place Order
                         </h5>
@@ -28,37 +32,60 @@ function OrderModal({
                             className="btn-close"
                             onClick={onClose}
                         />
+
                     </div>
 
-                <div className="modal-body">
-                    <input className="form-control mb-2" value={selectedFood?.foodName || ""} readOnly />
-                    <input className="form-control mb-2" value={selectedFood?.foodId || ""} readOnly/>
-                    <input type="number" className="form-control mb-2" placeholder="User ID" value={order.userId || ""}
-                    onChange={(e) =>
-                        setOrder({ ...order, 
-                            userId: e.target.value
-                        }) 
-                    }/>
-                    <input type="number" className="form-control mb-2" placeholder="Quantity" value={order.quantity || ""}
-                        onChange={(e) => setOrder({
-                            ...order,
-                            quantity: e.target.value })
-                            }/>
+                    <div className="modal-body">
 
-                </div>
-                <div className="modal-footer">
-                    <button className="btn btn-secondary" onClick={onClose}> 
-                            Cancel </button>
+                        <input
+                            className="form-control mb-2"
+                            value={selectedFood?.foodName || ""}
+                            readOnly
+                        />
 
-                    <button className="btn btn-primary" onClick={onSubmit}>
+                        <input
+                            className="form-control mb-2"
+                            value={selectedFood?.foodId || ""}
+                            readOnly
+                        />
+
+                        <input
+                            type="number"
+                            className="form-control mb-2"
+                            placeholder="Quantity"
+                            value={order.quantity || ""}
+                            onChange={(e) =>
+                                setOrder({
+                                    ...order,
+                                    quantity: e.target.value
+                                })
+                            }
+                        />
+
+                    </div>
+
+                    <div className="modal-footer">
+
+                        <button
+                            className="btn btn-secondary"
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            className="btn btn-primary"
+                            onClick={onSubmit}
+                        >
                             Place Order
                         </button>
 
-                </div>
-            </div>
+                    </div>
 
+                </div>
+
+            </div>
         </div>
-    </div>
     );
 }
 

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.foodapp.dto.OrderDTO;
+import com.foodapp.dto.UserDto;
 import com.foodapp.entity.User;
 import com.foodapp.exception.InvalidUserDataException;
 import com.foodapp.exception.UserNotFoundException;
@@ -45,14 +46,23 @@ import jakarta.transaction.Transactional;
 		}
 
 		@Override
-		public User updateUser(Integer id, User user) {
+		public User updateUser(Integer id, UserDto userdto) {
 			User existingUser = userRepository.findById(id)
 					.orElseThrow(() -> new UserNotFoundException("User Not Found With Id :" + id));
-			existingUser.setName(user.getName());
-			existingUser.setEmail(user.getEmail());
-			existingUser.setPhonenumber(user.getPhonenumber());
-			existingUser.setAddress(user.getAddress());
 
+			if (userdto.getName() != null) {
+				existingUser.setName(userdto.getName());
+			}
+			if (userdto.getEmail() != null) {
+				existingUser.setEmail(userdto.getEmail());
+			}
+			if (userdto.getPhonenumber() != null) {
+				existingUser.setPhonenumber(userdto.getPhonenumber());
+			}
+
+			if (userdto.getAddress() != null) {
+				existingUser.setAddress(userdto.getAddress());
+			}
 			return userRepository.save(existingUser);
 		}
 

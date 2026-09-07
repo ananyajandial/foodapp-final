@@ -2,6 +2,7 @@ package com.foodapp.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.foodapp.dto.OrderDTO;
+import com.foodapp.dto.UserDto;
 import com.foodapp.entity.User;
 import com.foodapp.exception.InvalidUserDataException;
 import com.foodapp.feign.OrderClient;
@@ -72,9 +73,9 @@ public class UserController {
 	}
 
 	@PutMapping("update/{id}")                                        //admin
-	public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User user) {
+	public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody UserDto userdto) {
 		logger.info("Status API Called for All updateUsers");
-		return ResponseEntity.ok(userService.updateUser(id, user));
+		return ResponseEntity.ok(userService.updateUser(id, userdto));
 	}
 	
 	@DeleteMapping("/delete/{id}")                                         //admin

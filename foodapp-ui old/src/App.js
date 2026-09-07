@@ -59,12 +59,25 @@ const showValidationError = (message) => {
     );
   }
 
+const handleProfileUpdate = async (profile) => {
+
+    const {
+        userId,
+        ...userDto
+    } = profile;
+
+    await apiRequest(
+        "PUT",
+        `/users/update/${userId}`,
+        userDto
+    );
+};
+
   //order
     const [showOrderModal, setShowOrderModal] = useState(false);
     const [selectedFood, setSelectedFood] = useState(null);
     
-    const defaultOrder = {
-    userId: "",
+const defaultOrder = {
     quantity: 1
 };
 
@@ -74,29 +87,46 @@ const handleDeleteFood = async (foodId) => {
         "DELETE",
         `/admin/delete/${foodId}`
     );
-
-    await apiRequest(
-        "GET",
-        lastEndpoint
-    );
 };
 
 const [order, setOrder] = useState(defaultOrder);
 
 const executeOrderSubmission = async (payload) => {
+
+    const username =
+        localStorage.getItem("loginUserName");
+
+    let userId = null;
+
+    switch ((username || "").toLowerCase()) {
+
+        case "ananya":
+            userId = 100;
+            break;
+
+        case "khushbu":
+            userId = 101;
+            break;
+
+        case "isheeta":
+            userId = 102;
+            break;
+
+        default:
+            userId = null;
+    }
+
+    const orderPayload = {
+        ...payload,
+        userId
+    };
+
     await apiRequest(
         "POST",
         "/orders/placeorder",
-        payload
+        orderPayload
     );
-    localStorage.setItem(
-      "currentUserId",
-      payload.userId
-);
-
-    setShowOrderModal(false);
-    setOrder(defaultOrder);
-}
+};
 
 const handleLogin = async (username, password , setValidationError) => {   
   
@@ -153,50 +183,108 @@ const handleLogout = () => {
     setError('');
 };
 
-const handleCancelOrder = async(orderId) => {
+const handleCancelOrder = async (orderId) => {
 
     await apiRequest(
         "GET",
         `/orders/cancel/${orderId}`
     );
 
-    const userId =
-        localStorage.getItem("currentUserId");
+    const username =
+        localStorage.getItem("loginUserName");
 
-    await apiRequest(
-        "GET",
-        `/orders/view/id/${userId}`
-    );
-}
+    let userId = null;
+
+    switch ((username || "").toLowerCase()) {
+
+        case "ananya":
+            userId = 100;
+            break;
+
+        case "khushbu":
+            userId = 101;
+            break;
+
+        case "isheeta":
+            userId = 102;
+            break;
+
+        default:
+            userId = null;
+    }
+
+    if (userId) {
+
+        await apiRequest(
+            "GET",
+            `/orders/${userId}`
+        );
+
+    }
+};
 
 
   const apiRequest = async (method, endpoint, data = null) => {
+
     try {
-      setError("");
-if (method === "GET") {
-    console.log("Setting last endpoint:", endpoint);
-    setLastEndpoint(endpoint);
-}
-      const response = await callApi(
-         method,
-         endpoint,
-         token,
-         data
+
+        setError("");
+
+        if (
+            method === "GET" &&
+            lastEndpoint === endpoint
+        ) {
+
+            setDataList([]);
+            setViewTitle("");
+            setLastEndpoint("");
+
+            return;
+        }
+
+        if (method === "GET") {
+            console.log(
+                "Setting last endpoint:",
+                endpoint
+            );
+
+            setLastEndpoint(endpoint);
+        }
+
+        const response = await callApi(
+            method,
+            endpoint,
+            token,
+            data
         );
+
         setDataList(response.data);
         setViewTitle("");
-        // setViewTitle(`Result for: ${endpoint}`);
-      } catch (error) {
+
+    } catch (error) {
+
         setDataList([]);
         setViewTitle("");
-        if (!error.response) {
-          setError("Unable to connect to server. Please make sure the backend is running.");
-        } else {
-          setError(error.response.data?.message || error.response.data || "Something went wrong" );
-          }
-        }
-      };
 
+        if (!error.response) {
+
+            setError(
+                "Unable to connect to server. Please make sure the backend is running."
+            );
+
+        } else {
+
+            setError(
+                error.response.data?.message ||
+                error.response.data ||
+                "Something went wrong"
+            );
+
+        }
+
+    }
+
+};
   if (page === 'login') return <LoginView error = {error} setError = {setError} onLogin={handleLogin} />;
 
   return ( <div className="container mt-5 pb-5">
@@ -208,15 +296,23 @@ if (method === "GET") {
       )}
       <ResultView error={error} dataList={dataList} viewTitle={viewTitle} onEditFood={handleEditFood}
       onStatusUpdate={handleStatusUpdate} role={role} showOrderModal={showOrderModal} setShowOrderModal={setShowOrderModal} 
-      selectedFood={selectedFood} setSelectedFood={setSelectedFood} onOrderSubmit={executeOrderSubmission} onCancelOrder = {handleCancelOrder} onDeleteFood={handleDeleteFood}/>
+      selectedFood={selectedFood} setSelectedFood={setSelectedFood} onOrderSubmit={executeOrderSubmission} onCancelOrder = {handleCancelOrder} 
+      onDeleteFood={handleDeleteFood} onUpdateProfile = {handleProfileUpdate}/>
 
       <FoodEditModal show={showEditModal} food={editFood} setFood={setEditFood} onSave={handleSaveFood} onClose={() => setShowEditModal(false)} />
-      <OrderModal show={showOrderModal} order={order} setOrder={setOrder} selectedFood={selectedFood} onClose={() => setShowOrderModal(false)} 
-      onSubmit={() => executeOrderSubmission({
-            userId: Number(order.userId),
+<OrderModal
+    show={showOrderModal}
+    order={order}
+    setOrder={setOrder}
+    selectedFood={selectedFood}
+    onClose={() => setShowOrderModal(false)}
+    onSubmit={() =>
+        executeOrderSubmission({
             foodId: selectedFood.foodId,
             quantity: Number(order.quantity)
-        })}/>
+        })
+    }
+/>
 
       </div>
     );
