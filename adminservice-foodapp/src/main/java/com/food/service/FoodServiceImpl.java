@@ -113,12 +113,12 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<Food> getFoodByCategory(String category) {
+    public List<Food> getFoodByCategory(Food.category category) {
 
         logger.info("Fetching foods by category : {}", category);
 
         List<Food> foods =
-                foodRepository.findByCategoryContainingIgnoreCase(category);
+                foodRepository.findByCategory(category);
 
         if (foods.isEmpty()) {
             throw new FoodNotFoundException(
@@ -172,4 +172,32 @@ public class FoodServiceImpl implements FoodService {
 
         return foods;
     }
+    
+    @Override
+    public List<Food> getFoodByCategoryAndPrice(
+            Food.category category,
+            Double price) {
+
+        logger.info(
+                "Fetching foods by category {} and below price {}",
+                category,
+                price);
+
+        List<Food> foods =
+                foodRepository.findByCategoryAndPriceLessThan(
+                        category,
+                        price);
+
+        if (foods.isEmpty()) {
+
+            throw new FoodNotFoundException(
+                    "No food found for category "
+                            + category
+                            + " below price "
+                            + price);
+        }
+
+        return foods;
+    }
+
 }

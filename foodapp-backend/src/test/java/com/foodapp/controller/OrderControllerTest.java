@@ -38,8 +38,8 @@ class OrderControllerTest {
         when(service.viewOrder(1))
                 .thenReturn(Optional.of(order));
 
-        ResponseEntity<Order> response =
-                controller.viewOrder(1);
+        ResponseEntity<List<Order>> response =
+                controller.findByUserId(1);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }

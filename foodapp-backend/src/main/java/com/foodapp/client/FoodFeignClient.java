@@ -9,7 +9,7 @@ import com.foodapp.dto.FoodDTO;
 @FeignClient(name="food-service"
 )
 public interface FoodFeignClient {
-    @GetMapping("admin/{foodId}")
+    @GetMapping("admin/food/{foodId}")
     public FoodDTO getFoodById(@PathVariable int foodId);
     
 

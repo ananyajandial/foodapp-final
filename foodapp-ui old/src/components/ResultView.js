@@ -1,7 +1,7 @@
 
 
-function ResultView({ error, dataList, viewTitle, onEditFood , onDeleteFood , onStatusUpdate , role,
-showOrderModal, setShowOrderModal, selectedFood, setSelectedFood, onOrderSubmit}) {
+function ResultView({ error, dataList, viewTitle, onEditFood , onDeleteFood  , onStatusUpdate , role,
+setShowOrderModal, setSelectedFood , onCancelOrder}) {
 
 const isSimpleMessage = 
     typeof dataList === "string" ||
@@ -60,9 +60,25 @@ const isSimpleMessage =
             <th key={key}>{key}</th>
                             ))}
 
-            {(isFoodTable || isOrderTable) && (
-                <th>Actions</th>
-             )}
+{isFoodTable && <th>Actions</th>}
+
+{isOrderTable && role === "ROLE_ADMIN" && (
+    <th>Actions</th>
+)}
+
+{isOrderTable && role === "ROLE_USER" && (
+    <td>
+        {item.status?.toLowerCase() === "placed" && (
+            <button
+                className="btn btn-danger btn-sm"
+                onClick={() => onCancelOrder(item.orderId)}
+            >
+                Cancel Order
+            </button>
+        )}
+    </td>
+)}
+
 
             </tr>
     </thead>
@@ -114,37 +130,43 @@ const isSimpleMessage =
 </td>
 )}
 
-               {isOrderTable && (
-               <td>
+{isOrderTable && role === "ROLE_ADMIN" &&( 
+    <td>
+         <select className="form-select form-select-sm" defaultValue={item.status}
+            onChange={(e) => onStatusUpdate(item.orderId , e.target.value)}>
 
-               <select className="form-select form-select-sm"
-                      defaultValue={item.status}
-                      onChange={(e) => onStatusUpdate(item.orderId , e.target.value)}
-                                        >
-
-               <option value="placed"> placed </option>
-               <option value="preparing"> preparing </option>
-               <option value="delivered"> delivered </option>
-               <option value="cancelled"> cancelled </option>
-              </select>
-
-               </td>
-             )}
-
-            </tr>
+            <option value="placed"> placed </option>
+            <option value="preparing"> preparing </option>
+            <option value="delivered"> delivered </option>
+            <option value="cancelled"> cancelled </option>
+        </select>
+    </td>
+        )}
+ {isOrderTable && role === "ROLE_USER" && (
+    <td>
+        {item.status?.toLowerCase() === "placed" && (
+            <button
+                className="btn btn-danger btn-sm"
+                onClick={() => onCancelOrder(item.orderId)}
+            >
+                Cancel Order
+            </button>
+        )}
+    </td>
+)}
+    </tr>
         ))}
 
-        </tbody>
+</tbody>
     </table> ) : (
-
         <table className="table table-bordered">
             <tbody>
 
-                {Object.entries(dataList).map(([key, value]) => (
+            {Object.entries(dataList).map(([key, value]) => (
 
-                <tr key={key}>
-                    <th>{key}</th>
-                        <td>{String(value)}</td>
+            <tr key={key}>
+                <th>{key}</th>
+                    <td>{String(value)}</td>
                 </tr>
          ))}
             </tbody>

@@ -17,11 +17,13 @@ public interface FoodService {
 
     void deleteFood(Integer foodId);
     
-    List<Food> getFoodByCategory(String category);
+    List<Food> getFoodByCategory(Food.category category);
 
     List<Food> getFoodBelowPrice(Double price);
 
     List<Food> getAvailableFoods();
 
     List<Food> getFoodBetweenPrices(Double minPrice, Double maxPrice);
+    
+    List<Food> getFoodByCategoryAndPrice(Food.category category, Double price);
 }

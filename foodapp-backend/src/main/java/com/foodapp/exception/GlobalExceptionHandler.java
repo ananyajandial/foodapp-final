@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
 		@ExceptionHandler(FeignException.class)
 		public ResponseEntity<String> handleFeignException(FeignException ex) {
 
-		    return new ResponseEntity<String>("Please enter correct food/user ID",HttpStatus.NOT_FOUND);
+		    return new ResponseEntity<String>("Please enter correct user ID",HttpStatus.NOT_FOUND);
 		}
 		
 		@ExceptionHandler(MethodArgumentTypeMismatchException.class)

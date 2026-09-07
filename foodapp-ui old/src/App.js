@@ -38,9 +38,7 @@ const showValidationError = (message) => {
     setEditFood(food);
     setShowEditModal(true);
   };
-  const handleDeleteFood = async (foodId) => {
-    await apiRequest("DELETE", `/admin/delete/${foodId}`                        );
-    }
+
     const handleStatusUpdate = async (
     orderId,
     status) => {
@@ -70,6 +68,19 @@ const showValidationError = (message) => {
     quantity: 1
 };
 
+const handleDeleteFood = async (foodId) => {
+
+    await apiRequest(
+        "DELETE",
+        `/admin/delete/${foodId}`
+    );
+
+    await apiRequest(
+        "GET",
+        lastEndpoint
+    );
+};
+
 const [order, setOrder] = useState(defaultOrder);
 
 const executeOrderSubmission = async (payload) => {
@@ -78,6 +89,10 @@ const executeOrderSubmission = async (payload) => {
         "/orders/placeorder",
         payload
     );
+    localStorage.setItem(
+      "currentUserId",
+      payload.userId
+);
 
     setShowOrderModal(false);
     setOrder(defaultOrder);
@@ -138,6 +153,22 @@ const handleLogout = () => {
     setError('');
 };
 
+const handleCancelOrder = async(orderId) => {
+
+    await apiRequest(
+        "GET",
+        `/orders/cancel/${orderId}`
+    );
+
+    const userId =
+        localStorage.getItem("currentUserId");
+
+    await apiRequest(
+        "GET",
+        `/orders/view/id/${userId}`
+    );
+}
+
 
   const apiRequest = async (method, endpoint, data = null) => {
     try {
@@ -175,59 +206,19 @@ if (method === "GET") {
       ) : (
         <UserDashboard apiRequest={apiRequest} onLogout={handleLogout} showValidationError = {showValidationError} />
       )}
-<ResultView
-    error={error}
-    dataList={dataList}
-    viewTitle={viewTitle}
-    onEditFood={handleEditFood}
-    onDeleteFood={handleDeleteFood}
-    onStatusUpdate={handleStatusUpdate}
-    role={role}
-    showOrderModal={showOrderModal}
-    setShowOrderModal={setShowOrderModal}
-    selectedFood={selectedFood}
-    setSelectedFood={setSelectedFood}
-    onOrderSubmit={executeOrderSubmission}
-/>
+      <ResultView error={error} dataList={dataList} viewTitle={viewTitle} onEditFood={handleEditFood}
+      onStatusUpdate={handleStatusUpdate} role={role} showOrderModal={showOrderModal} setShowOrderModal={setShowOrderModal} 
+      selectedFood={selectedFood} setSelectedFood={setSelectedFood} onOrderSubmit={executeOrderSubmission} onCancelOrder = {handleCancelOrder} onDeleteFood={handleDeleteFood}/>
+
       <FoodEditModal show={showEditModal} food={editFood} setFood={setEditFood} onSave={handleSaveFood} onClose={() => setShowEditModal(false)} />
-        <OrderModal
-    show={showOrderModal}
-    order={order}
-    setOrder={setOrder}
-    selectedFood={selectedFood}
-    onClose={() => {
-        setShowOrderModal(false);
-
-        setOrder({
-            userId: "",
-            quantity: 1
-        });
-    }}
-    onSubmit={() =>
-        ({
+      <OrderModal show={showOrderModal} order={order} setOrder={setOrder} selectedFood={selectedFood} onClose={() => setShowOrderModal(false)} 
+      onSubmit={() => executeOrderSubmission({
             userId: Number(order.userId),
             foodId: selectedFood.foodId,
             quantity: Number(order.quantity)
-        })
-    }
-/>
+        })}/>
 
-<OrderModal
-    show={showOrderModal}
-    order={order}
-    setOrder={setOrder}
-    selectedFood={selectedFood}
-    onClose={() => setShowOrderModal(false)}
-    onSubmit={() =>
-        executeOrderSubmission({
-            userId: Number(order.userId),
-            foodId: selectedFood.foodId,
-            quantity: Number(order.quantity)
-        })
-    }
-/>
       </div>
-      
     );
 }
 

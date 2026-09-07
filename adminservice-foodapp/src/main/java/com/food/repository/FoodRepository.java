@@ -12,12 +12,11 @@ public interface FoodRepository extends JpaRepository<Food, Integer> {
 
     // Find Food By Name
     Food findByFoodName(String foodName);
-    
+
     Food findByFoodId(int id);
 
-
     // Find Food By Category
-    List<Food> findByCategoryContainingIgnoreCase(String category);
+    List<Food> findByCategory(Food.category category);
 
     // Find Food Below Particular Price
     List<Food> findByPriceLessThan(Double price);
@@ -27,6 +26,7 @@ public interface FoodRepository extends JpaRepository<Food, Integer> {
 
     // Find Food Between Two Prices
     List<Food> findByPriceBetween(Double minPrice, Double maxPrice);
-}
 
-//Added findByFoodId
+    // Find Food By Category and Price
+    List<Food> findByCategoryAndPriceLessThan(Food.category category,Double price);
+}

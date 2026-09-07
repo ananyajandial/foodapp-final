@@ -1,6 +1,8 @@
 package com.food.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Food {
+	
+	public enum category{
+		FASTFOOD, NORTHINDIAN, SOUTHINDIAN, CHINESE, DESSERT
+	}
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "food_seq")
@@ -27,7 +33,8 @@ public class Food {
 
     private String foodName;
     
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private category category;
 
     private double price;
 
@@ -35,14 +42,13 @@ public class Food {
 
     private boolean available;
 
-  
-
-    public Food(String foodName, String category, double price, String description, boolean available) {
+	public Food(String foodName, category category, double price, String description,
+			boolean available) {
+		super();
 		this.foodName = foodName;
 		this.category = category;
 		this.price = price;
 		this.description = description;
 		this.available = available;
 	}
-
 }

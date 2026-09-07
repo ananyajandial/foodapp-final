@@ -43,10 +43,10 @@ public class OrderController {
 	}
 	
 	@GetMapping("/view/id/{id}")
-	public ResponseEntity<Order> viewOrder(@PathVariable int id) throws OrderNotFoundException{
-		Optional<Order> getOrder =  service.viewOrder(id);
-		Order order = getOrder.orElseThrow(() -> new OrderNotFoundException("NO Order found with id: "+id));
-		return new ResponseEntity<Order>(order , HttpStatus.OK);
+	public ResponseEntity<List<Order>> viewOrder(@PathVariable int id) throws OrderNotFoundException{
+		List<Order> getOrder =  service.findByUserId(id);
+		return new ResponseEntity<List<Order>>(getOrder , HttpStatus.OK);
+		
 	}
 	
 	@GetMapping("/allOrders")
@@ -115,13 +115,19 @@ public class OrderController {
 		return new ResponseEntity<List<Order>>(getOrder , HttpStatus.OK);
 	}
 	
-//	@GetMapping("/{userId}")
-//	public ResponseEntity<List<Order>> findByTotalAmountGreaterThan(@PathVariable Double amt) throws OrderNotFoundException{
-//		List<Order> getOrder =  service.findByTotalAmountGreaterThan(amt);
-//		if (getOrder.isEmpty()) {
-//			throw new OrderNotFoundException("No Order above rs. : " +amt);
-//		}
-//		return new ResponseEntity<List<Order>>(getOrder , HttpStatus.OK);
-//	}
+	@GetMapping("/{userId}")
+	public ResponseEntity<List<Order>> findByUserId( @PathVariable Integer userId)
+	        throws OrderNotFoundException {
+
+	    List<Order> orders = service.findByUserId(userId);
+
+	    if (orders.isEmpty()) {
+	        throw new OrderNotFoundException(
+	                "No previous orders for : " + userId);
+	    }
+
+	    return new ResponseEntity<>(orders, HttpStatus.OK);
+	}
+	
 } 
 	

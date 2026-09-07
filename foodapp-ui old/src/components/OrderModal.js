@@ -30,70 +30,35 @@ function OrderModal({
                         />
                     </div>
 
-                    <div className="modal-body">
+                <div className="modal-body">
+                    <input className="form-control mb-2" value={selectedFood?.foodName || ""} readOnly />
+                    <input className="form-control mb-2" value={selectedFood?.foodId || ""} readOnly/>
+                    <input type="number" className="form-control mb-2" placeholder="User ID" value={order.userId || ""}
+                    onChange={(e) =>
+                        setOrder({ ...order, 
+                            userId: e.target.value
+                        }) 
+                    }/>
+                    <input type="number" className="form-control mb-2" placeholder="Quantity" value={order.quantity || ""}
+                        onChange={(e) => setOrder({
+                            ...order,
+                            quantity: e.target.value })
+                            }/>
 
-                    <input
-    className="form-control mb-2"
-    value={selectedFood?.foodName || ""}
-    readOnly
-/>
+                </div>
+                <div className="modal-footer">
+                    <button className="btn btn-secondary" onClick={onClose}> 
+                            Cancel </button>
 
-<input
-    className="form-control mb-2"
-    value={selectedFood?.foodId || ""}
-    readOnly
-/>
-
-<input
-    type="number"
-    className="form-control mb-2"
-    placeholder="User ID"
-    value={order.userId || ""}
-    onChange={(e) =>
-        setOrder({
-            ...order,
-            userId: e.target.value
-        })
-    }
-/>
-
-<input
-    type="number"
-    className="form-control mb-2"
-    placeholder="Quantity"
-    value={order.quantity || ""}
-    onChange={(e) =>
-        setOrder({
-            ...order,
-            quantity: e.target.value
-        })
-    }
-/>
-
-
-                    </div>
-
-                    <div className="modal-footer">
-
-                        <button
-                            className="btn btn-secondary"
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </button>
-
-                        <button
-                            className="btn btn-primary"
-                            onClick={onSubmit}
-                        >
+                    <button className="btn btn-primary" onClick={onSubmit}>
                             Place Order
                         </button>
 
-                    </div>
-                    </div>
-
                 </div>
             </div>
+
+        </div>
+    </div>
     );
 }
 

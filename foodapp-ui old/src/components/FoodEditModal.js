@@ -22,20 +22,12 @@ function FoodEditModal({
                             Edit Food
                         </h5>
 
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={onClose}
-                        />
+                        <button type="button" className="btn-close" onClick={onClose} />
                     </div>
 
                     <div className="modal-body">
-
-                        <input
-                            className="form-control mb-2"
-                            placeholder="Food Name"
-                            value={food.foodName || ""}
-                            onChange={(e) =>
+                        <input className="form-control mb-2" placeholder="Food Name"
+                            value={food.foodName || ""} onChange={(e) =>
                                 setFood({
                                     ...food,
                                     foodName: e.target.value
@@ -43,11 +35,8 @@ function FoodEditModal({
                             }
                         />
 
-                        <input
-                            className="form-control mb-2"
-                            placeholder="Category"
-                            value={food.category || ""}
-                            onChange={(e) =>
+                        <input className="form-control mb-2" placeholder="Category"
+                            value={food.category || ""} onChange={(e) =>
                                 setFood({
                                     ...food,
                                     category: e.target.value
@@ -55,11 +44,8 @@ function FoodEditModal({
                             }
                         />
 
-                        <input
-                            type="number"
-                            className="form-control mb-2"
-                            placeholder="Price"
-                            value={food.price || ""}
+                        <input type="number" className="form-control mb-2"
+                            placeholder="Price" value={food.price || ""}
                             onChange={(e) =>
                                 setFood({
                                     ...food,

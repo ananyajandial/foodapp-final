@@ -46,8 +46,13 @@ public class OrderServiceImpl implements IOrderService {
             throw new InvalidQuantityException("Quantity must be greater than zero.");
         }
 
+        System.out.println("Before food call");
+
         int foodId = order.getFoodId();
         FoodDTO foodDto = foodFeignClient.getFoodById(foodId);
+        
+        System.out.println("After food call");
+
         
         if (foodDto == null) {
         	throw new FoodNotAvailableException("Sorry .. Food Item with id : "+foodId +" does not exist");

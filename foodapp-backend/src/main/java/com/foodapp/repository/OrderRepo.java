@@ -23,5 +23,6 @@ public interface OrderRepo extends JpaRepository<Order, Integer> {
 	
 	public List<Order> findByTotalAmountGreaterThan(Double amt);
 	
+	
 }
 
